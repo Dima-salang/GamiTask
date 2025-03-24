@@ -31,6 +31,14 @@ class TaskViewModel @Inject constructor(private val taskRepository: TaskReposito
         }
     }
 
+    fun getTasksByCompletionStatus(isCompleted: Boolean) {
+        viewModelScope.launch {
+            taskRepository.getTasksByCompletionStatus(isCompleted).collect { completedTasks ->
+                _completedTasks.value = completedTasks
+            }
+        }
+    }
+
     // Function to add a new task
     fun insertTask(task: Task) {
         viewModelScope.launch {
