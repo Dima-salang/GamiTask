@@ -9,21 +9,4 @@ import android.content.Context
 @Database(entities = [Task::class], version = 1, exportSchema = false)
 abstract class TaskDatabase: RoomDatabase() {
     abstract fun taskDao(): TaskDAO
-
-    companion object {
-        @Volatile
-        private var INSTANCE: TaskDatabase? = null
-        fun getDatabase(context: Context): TaskDatabase {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
-        }
-
-        private fun buildDatabase(context: Context) = Room.databaseBuilder(
-            context.applicationContext,
-            TaskDatabase::class.java,
-            "task_database"
-        ).build()
-    }
-
 }

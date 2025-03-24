@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gamitask.features.taskmanagement.data.models.Task
 import com.example.gamitask.features.taskmanagement.data.viewmodel.TaskViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToDoApplication(taskViewModel: TaskViewModel = viewModel()) {
+fun ToDoApplication(taskViewModel: TaskViewModel = hiltViewModel()) {
     val taskList by taskViewModel.tasks.collectAsStateWithLifecycle()
     var taskText by remember { mutableStateOf("") }
 
