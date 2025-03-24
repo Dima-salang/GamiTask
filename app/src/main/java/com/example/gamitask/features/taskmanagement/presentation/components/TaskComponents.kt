@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gamitask.features.taskmanagement.domain.models.Task
-import com.example.gamitask.features.taskmanagement.domain.viewmodel.TaskViewModel
+import com.example.gamitask.features.taskmanagement.data.models.Task
+import com.example.gamitask.features.taskmanagement.data.viewmodel.TaskViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
@@ -103,6 +103,7 @@ fun TaskList(tasks: List<Task>, onDelete: (Task) -> Unit) {
 
 @Composable
 fun TaskItem(task: Task, modifier: Modifier = Modifier, onDelete: (Task) -> Unit) {
+
     Card(
         modifier = modifier
             .fillMaxWidth()

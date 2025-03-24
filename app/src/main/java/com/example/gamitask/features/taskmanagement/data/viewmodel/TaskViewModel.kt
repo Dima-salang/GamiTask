@@ -1,14 +1,15 @@
-package com.example.gamitask.features.taskmanagement.domain.viewmodel
+package com.example.gamitask.features.taskmanagement.data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gamitask.features.taskmanagement.domain.models.Task
+import com.example.gamitask.features.taskmanagement.data.dao.TaskDAO
+import com.example.gamitask.features.taskmanagement.data.models.Task
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class TaskViewModel : ViewModel() {
+class TaskViewModel(private val taskDAO: TaskDAO) : ViewModel() {
     // Private mutable state flow to store the task list
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
 

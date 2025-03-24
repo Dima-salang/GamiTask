@@ -1,4 +1,4 @@
-package com.example.gamitask.features.taskmanagement.domain.models
+package com.example.gamitask.features.taskmanagement.data.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID

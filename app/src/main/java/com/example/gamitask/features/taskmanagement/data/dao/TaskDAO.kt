@@ -1,6 +1,6 @@
 package com.example.gamitask.features.taskmanagement.data.dao
 import androidx.room.*
-import com.example.gamitask.features.taskmanagement.domain.models.Task
+import com.example.gamitask.features.taskmanagement.data.models.Task
 
 @Dao
 interface TaskDAO {
