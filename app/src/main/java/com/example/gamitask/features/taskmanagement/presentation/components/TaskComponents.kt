@@ -1,20 +1,24 @@
 package com.example.gamitask.features.taskmanagement.presentation.components
 
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gamitask.features.taskmanagement.data.models.Task
 import com.example.gamitask.features.taskmanagement.data.viewmodel.TaskViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +32,7 @@ fun ToDoApplication(taskViewModel: TaskViewModel = hiltViewModel()) {
             TopAppBar(
                 title = { Text(text = "GamiTask") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
+                    containerColor = Color.DarkGray,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.White,
                 )
@@ -56,7 +60,8 @@ fun ToDoApplication(taskViewModel: TaskViewModel = hiltViewModel()) {
         ) {
             TaskList(
                 tasks = taskList,
-                onDelete = { taskViewModel.deleteTask(it) }
+                onDelete = { taskViewModel.deleteTask(it) },
+                onToggleComplete = { taskViewModel.toggleTaskCompletion(it) }
             )
         }
     }
@@ -91,30 +96,65 @@ fun BottomInputBar(taskText: String, onTaskTextChange: (String) -> Unit, onAddTa
 }
 
 @Composable
-fun TaskList(tasks: List<Task>, onDelete: (Task) -> Unit) {
+fun TaskList(tasks: List<Task>, onDelete: (Task) -> Unit, onToggleComplete: (Task) -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 64.dp)  // Space for input field
     ) {
         items(tasks) { task ->
-            TaskItem(task = task, onDelete = onDelete)
+            TaskItem(task = task, onDelete = onDelete, onToggleComplete = onToggleComplete)
         }
     }
 }
 
 @Composable
-fun TaskItem(task: Task, modifier: Modifier = Modifier, onDelete: (Task) -> Unit) {
+fun TaskItem(
+    task: Task,
+    onDelete: (Task) -> Unit,
+    onToggleComplete: (Task) -> Unit
+) {
+    var offsetX by remember { mutableFloatStateOf(0f) }
 
-    Card(
-        modifier = modifier
+    Box(
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures { _, dragAmount ->
+                    offsetX += dragAmount
+                    if (offsetX > 200) {  // Adjust threshold for swipe
+                        onDelete(task)
+                    }
+                }
+            }
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Text(text = task.description, modifier = Modifier.weight(1f))
-            Button(onClick = { onDelete(task) }) {
-                Text("Delete")
+        Card(
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = if (task.isCompleted) Color.Gray else Color.White
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = task.isCompleted,
+                    onCheckedChange = { onToggleComplete(task) }
+                )
+
+                Text(
+                    text = task.description,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp),
+                    fontSize = 18.sp,
+                    textDecoration = if (task.isCompleted) TextDecoration.LineThrough else TextDecoration.None
+                )
             }
         }
     }

@@ -16,11 +16,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
     @Provides
+    @Singleton
     fun provideTaskRepository(taskDAO: TaskDAO): TaskRepository {
         return TaskRepository(taskDAO)
     }
 
     @Provides
+    @Singleton
     fun provideTaskDAO(taskDatabase: TaskDatabase): TaskDAO {
         return taskDatabase.taskDao()
     }
